@@ -4,6 +4,7 @@ import com.morjo.model.dto.Quiz;
 import com.morjo.model.dto.QuizResult;
 
 public interface QuizDao {
+    Quiz selectQuizRandom();
     Quiz selectQuizById(long quizId);
     QuizResult selectQuizResultById(long quizId);
 }

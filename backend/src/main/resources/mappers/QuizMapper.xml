@@ -17,6 +17,10 @@
         <result property="userAnswers" column="answer4" />
     </resultMap>
 
+    <select id="selectQuizRandom" resultMap="QuizMap">
+        SELECT * FROM quiz
+        ORDER BY RAND() LIMIT 1
+    </select>
     <select id="selectQuizById" parameterType="long" resultMap="QuizMap">
         SELECT * FROM quiz
         WHERE quiz_id = #{quizId}
