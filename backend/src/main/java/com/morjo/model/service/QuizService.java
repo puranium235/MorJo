@@ -20,6 +20,12 @@ public class QuizService {
     }
 
     public QuizResult getQuizResultById(long quizId) {
+        Quiz quiz = quizDao.selectQuizById(quizId);
+
+        if (quiz == null) {
+            return null;
+        }
+
         return quizDao.selectQuizResultById(quizId);
     }
 }
