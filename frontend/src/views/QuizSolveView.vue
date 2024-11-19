@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <quiz-conent :content="content"></quiz-conent>
+    <quiz-content :content="content"></quiz-content>
     <quiz-option v-for="(option, index) in options" :key="option" :option="option" :selected="index === userAnswer - 1"
                  @click="onAnswerClick(index)"></quiz-option>
     <hr>
@@ -13,7 +13,7 @@
 </template>
 
 <script setup>
-import QuizConent from '@/components/quiz/QuizConent.vue'
+import QuizContent from '@/components/quiz/QuizContent.vue'
 import QuizOption from '@/components/quiz/QuizOption.vue'
 import QuizButton from '@/components/quiz/QuizButton.vue'
 
