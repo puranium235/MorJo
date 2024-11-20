@@ -1,19 +1,25 @@
 package com.morjo.controller;
 
-import com.morjo.model.dto.User;
-import com.morjo.model.service.UserSerivce;
-import jakarta.servlet.http.HttpSession;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.morjo.model.dto.User;
+import com.morjo.model.service.UserService;
+
+import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/user")
 public class UserController {
 
-    private final UserSerivce userSerivce;
+    private final UserService userService;
 
     @PostMapping("/join")
     public ResponseEntity<?> join(@RequestBody User user, HttpSession session) {
@@ -24,7 +30,7 @@ public class UserController {
         }
 
         user.setKakaoId(kakaoId);
-        boolean success = userSerivce.join(user);
+        boolean success = userService.join(user);
 
         // !TODO 따로 에러를 줘야하는 상황 : 닉네임 중복
         if (success) {
@@ -38,20 +44,19 @@ public class UserController {
 
     @GetMapping("/")
     public ResponseEntity<?> getUser(HttpSession session) {
-        User userId = (User) session.getAttribute("userId");
+        Long userId = (Long) session.getAttribute("userId");
 
         if (userId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인 상태가 아닙니다");
         }
 
-        return null;
         // !TODO UserService.getUserByUserId() 만들어지면 주석 풀기
-//        User user = userSerivce.getUserByUserId(userId);
-//
-//        if (user == null) {
-//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사이트 회원이 아닙니다");
-//        }
-//
-//        return ResponseEntity.status(HttpStatus.OK).body(user);
+        boolean check = userService.checkUser(userId);
+
+        if (!check) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사이트 회원이 아닙니다");
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

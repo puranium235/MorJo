@@ -1,27 +1,30 @@
 package com.morjo.controller;
 
-import com.morjo.model.dto.KakaoTokenInfo;
-import com.morjo.model.dto.User;
-import com.morjo.model.service.UserSerivce;
-import jakarta.servlet.http.HttpSession;
-import org.apache.tomcat.util.http.parser.HttpParser;
+import java.net.URI;
+
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.morjo.model.dto.KakaoToken;
+import com.morjo.model.dto.KakaoTokenInfo;
 import com.morjo.model.service.OAuthService;
+import com.morjo.model.service.UserService;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-
-import java.net.URI;
 
 @RestController
 @RequiredArgsConstructor
 public class LoginController {
 
     private final OAuthService oAuthService;
-    private final UserSerivce userSerivce;
+    private final UserService userService;
 
     @Value("${morjo.client-url}")
     private String CLIENT_URL;
@@ -31,7 +34,7 @@ public class LoginController {
         KakaoToken token = oAuthService.getKakaoToken(code);
         KakaoTokenInfo tokenInfo = oAuthService.getKakaoTokenInfo(token.getAccess_token());
 
-        long userId = userSerivce.getUserByKakaoId(tokenInfo.getId());
+        long userId = userService.getUserByKakaoId(tokenInfo.getId());
 
         HttpHeaders headers = new HttpHeaders();
 

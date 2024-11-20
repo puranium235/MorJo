@@ -41,7 +41,10 @@ const onButtonClick = (val) => {
 onMounted(async () => {
   const data = await getRandomQuiz()
   content.value = data.content;
-  options.value = data.options;
+  options.value[0] = data.option1;
+  options.value[1] = data.option2;
+  data.option4 ? options.value[3] = data.option4 : options.value.length = 3;
+  data.option3 ? options.value[2] = data.option3 : options.value.length = 2;
 })
 </script>
 
