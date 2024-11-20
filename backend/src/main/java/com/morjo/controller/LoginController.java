@@ -1,7 +1,10 @@
 package com.morjo.controller;
 
+import com.morjo.model.dto.KakaoTokenInfo;
 import com.morjo.model.dto.User;
-import jakarta.servlet.http.Cookie;
+import com.morjo.model.service.UserSerivce;
+import jakarta.servlet.http.HttpSession;
+import org.apache.tomcat.util.http.parser.HttpParser;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
@@ -18,53 +21,42 @@ import java.net.URI;
 public class LoginController {
 
     private final OAuthService oAuthService;
+    private final UserSerivce userSerivce;
 
     @Value("${morjo.client-url}")
     private String CLIENT_URL;
 
-    @Value("${morjo.server-url}")
-    private String SERVER_URL;
-
     @GetMapping("/login")
-    public ResponseEntity<?> login(@RequestParam String code) {
+    public ResponseEntity<?> login(@RequestParam String code, HttpSession session) {
         KakaoToken token = oAuthService.getKakaoToken(code);
-        String accessToken = token.getAccess_token();
-        String refreshToken = token.getRefresh_token();
+        KakaoTokenInfo tokenInfo = oAuthService.getKakaoTokenInfo(token.getAccess_token());
 
-        boolean isUser = oAuthService.isUser(accessToken);
-
-        // !TODO cookie의 sameSite 옵션에 대해 더 알아보고 적용
-        ResponseCookie accessTokenCookie = ResponseCookie.from("accessToken", accessToken)
-                .httpOnly(true)
-                .path("/")
-                .maxAge(60 * 30)
-                .build();
-
-        ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", refreshToken)
-                .httpOnly(true)
-                .path("/")
-                .maxAge(60 * 30)
-                .build();
+        long userId = userSerivce.getUserByKakaoId(tokenInfo.getId());
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Set-Cookie", String.valueOf(accessTokenCookie));
-        headers.add("Set-Cookie", String.valueOf(refreshTokenCookie));
 
-        if (isUser) {
-            headers.setLocation(URI.create(CLIENT_URL + "/login?isValidUser=true"));
+        if (userId > 0) {
+            session.setAttribute("userId", userId);
+
+            headers.setLocation(URI.create(CLIENT_URL));
             return ResponseEntity.status(HttpStatus.TEMPORARY_REDIRECT).headers(headers).build();
         }
+
+        session.setAttribute("kakaoId", tokenInfo.getId());
 
         headers.setLocation(URI.create(CLIENT_URL + "/join"));
         return ResponseEntity.status(HttpStatus.TEMPORARY_REDIRECT).headers(headers).build();
     }
 
-    @PostMapping("/join")
-    public ResponseEntity<?> join(@RequestBody User user, @CookieValue("accessToken") String accessToken) {
-        boolean success = oAuthService.join(user, accessToken);
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpSession session) {
+        Long userId = (Long) session.getAttribute("userId");
 
-        // !TODO 따로 에러를 줘야하는 상황 : 닉네임 중복, accessToken 없음
-        return success ? ResponseEntity.status(HttpStatus.CREATED).build()
-                : ResponseEntity.status(HttpStatus.CONFLICT).build();
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인 상태가 아닙니다");
+        }
+
+        session.removeAttribute("userId");
+        return ResponseEntity.status(HttpStatus.OK).body("로그인 완료");
     }
 }
