@@ -36,7 +36,7 @@ public class UserController {
         if (success) {
             session.removeAttribute("kakaoId");
             session.setAttribute("userId", user.getUserId());
-            ResponseEntity.status(HttpStatus.CREATED).build();
+            return ResponseEntity.status(HttpStatus.CREATED).build();
         }
 
         return ResponseEntity.status(HttpStatus.CONFLICT).body("중복된 닉네임입니다");
