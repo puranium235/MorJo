@@ -1,12 +1,20 @@
 package com.morjo.controller;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.morjo.model.dto.Quiz;
 import com.morjo.model.dto.QuizResult;
 import com.morjo.model.service.QuizService;
+
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -46,6 +54,17 @@ public class QuizController {
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(result);
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<?> createQuiz(@RequestBody Quiz quiz) {
+        long quizId = quizService.createQuiz(quiz);
+
+        if (quizId == -1) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("본문, 선택지 또는 정답 값에 오류가 있습니다.");
+        }
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(quizId);
     }
 
 }

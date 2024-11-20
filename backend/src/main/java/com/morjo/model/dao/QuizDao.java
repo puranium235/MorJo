@@ -7,4 +7,5 @@ public interface QuizDao {
     Quiz selectQuizRandom();
     Quiz selectQuizById(long quizId);
     QuizResult selectQuizResultById(long quizId);
+    void insertQuiz(Quiz quiz);
 }

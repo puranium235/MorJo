@@ -2,13 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.morjo.model.dao.QuizDao">
-    <resultMap id="QuizMap" type="Quiz">
-        <id property="quizId" column="quiz_id" />
-        <result property="options" column="option1" />
-        <result property="options" column="option2" />
-        <result property="options" column="option3" />
-        <result property="options" column="option4" />
-    </resultMap>
     <resultMap id="QuizResultMap" type="QuizResult">
         <id property="quizId" column="quiz_id" />
         <result property="userAnswers" column="answer1" />
@@ -17,12 +10,12 @@
         <result property="userAnswers" column="answer4" />
     </resultMap>
 
-    <select id="selectQuizRandom" resultMap="QuizMap">
-        SELECT * FROM quiz
+    <select id="selectQuizRandom" resultType="Quiz">
+        SELECT quiz_id, content, option1, option2, option3, option4, created_user_id, created_at FROM quiz
         ORDER BY RAND() LIMIT 1
     </select>
-    <select id="selectQuizById" parameterType="long" resultMap="QuizMap">
-        SELECT * FROM quiz
+    <select id="selectQuizById" parameterType="long" resultType="Quiz">
+        SELECT quiz_id, content, option1, option2, option3, option4, created_user_id, created_at FROM quiz
         WHERE quiz_id = #{quizId}
     </select>
     <select id="selectQuizResultById" parameterType="long" resultMap="QuizResultMap">
@@ -35,9 +28,13 @@
                COUNT(CASE WHEN user_answer = 3 THEN 1 END)     AS answer3,
                COUNT(CASE WHEN user_answer = 4 THEN 1 END)     AS answer4,
                COUNT(CASE WHEN is_common_sense = 1 THEN 1 END) AS isCommonSense,
-               COUNT(CASE WHEN is_common_sense = 1 THEN 1 END) AS notCommonSense
+               COUNT(CASE WHEN is_common_sense = 0 THEN 1 END) AS notCommonSense
         FROM (SELECT *
               FROM quiz_user
               WHERE quiz_id = #{quizId}) as `quiz_result`
     </select>
+    <insert id="insertQuiz" useGeneratedKeys="true" keyProperty="quizId" parameterType="Quiz">
+    	INSERT INTO quiz(content, option1, option2, option3, option4, answer, created_user_id)
+        VALUES(#{content}, #{option1}, #{option2}, #{option3}, #{option4}, #{answer}, #{createdUserId})
+    </insert>
 </mapper>
