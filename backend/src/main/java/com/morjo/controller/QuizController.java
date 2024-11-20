@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
-@CrossOrigin("http://localhost:5173/")
 @RestController
 @RequestMapping("/quiz")
 public class QuizController {
