@@ -39,7 +39,7 @@ public class OAuthService {
 		body.add("client_id", REST_API_KEY);
 		body.add("redirect_uri", KAKAO_REDIRECT_URI);
 		body.add("code", code);
-
+    
 		HttpEntity<Object> entity = new HttpEntity<>(body, headers);
 		// !TODO 토큰 값 받아오기 실패시 처리 따로 해주기
 		return new RestTemplate().postForEntity("https://kauth.kakao.com/oauth/token", entity, KakaoToken.class).getBody();

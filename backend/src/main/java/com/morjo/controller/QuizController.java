@@ -2,7 +2,6 @@ package com.morjo.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,7 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.morjo.model.dto.Quiz;
 import com.morjo.model.dto.QuizResult;
 import com.morjo.model.service.QuizService;
+import com.morjo.model.service.UserService;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -21,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/quiz")
 public class QuizController {
     private final QuizService quizService;
+    private final UserService userService;
 
     // !TODO 유저정보를 받아서 안 푼 문제만 주게 수정필요
     @GetMapping("/random")
@@ -57,7 +59,22 @@ public class QuizController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> createQuiz(@RequestBody Quiz quiz) {
+    public ResponseEntity<?> createQuiz(@RequestBody Quiz quiz, HttpSession session) {
+        Object userIdObj = session.getAttribute("userId");
+        
+        if (userIdObj == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
+        }
+        
+        long userId = (long) userIdObj;
+        boolean checkUser = userService.checkUser(userId);
+        
+        if (!checkUser) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("유효하지 않은 사용자입니다.");
+        }
+        
+        quiz.setCreatedUserId(userId);
+        
         long quizId = quizService.createQuiz(quiz);
 
         if (quizId == -1) {
