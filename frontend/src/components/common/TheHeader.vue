@@ -4,7 +4,7 @@
     <nav>
       <span>문제등록 | </span>
       <span v-if="!user.isLoggedIn" @click="handleLogin" class="login">로그인</span>
-      <span v-else>로그아웃</span>
+      <span v-else @click="handleLogout" class="logout">로그아웃</span>
       <span v-if="user.isLoggedIn"> | 내정보</span>
     </nav>
   </header>
@@ -12,15 +12,21 @@
 
 <script setup>
 import { useUser } from '@/stores/user.js'
-
-const user = useUser()
+import { postLogout } from '@/api/userApi.js'
 
 const KAKAO_AUTH_URL = import.meta.env.VITE_KAKAO_AUTH_URL
 const REST_API_KEY = import.meta.env.VITE_KAKAO_REST_API_KEY
 const REDIRECT_URI = import.meta.env.VITE_KAKAO_REDIRECT_URI
 
+const user = useUser()
+
 const handleLogin = () => {
   location.href  =`${KAKAO_AUTH_URL}?response_type=code&client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}`
+}
+
+const handleLogout = async () => {
+  await postLogout()
+  window.location.reload()
 }
 </script>
 
@@ -33,7 +39,7 @@ const handleLogin = () => {
 
   padding: 20px 0 12px 0;
 }
-.login {
+.login, .logout {
   cursor: pointer;
 }
 </style>

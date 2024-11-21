@@ -13,16 +13,13 @@
 import { ref } from 'vue'
 import { postJoin } from '@/api/userApi.js'
 import router from '@/router/index.js'
-import { useUser } from '@/stores/user.js'
 
 const nickname = ref('')
 const error = ref(false)
-const user = useUser()
 
 const handleRegisterClick = async () => {
   try {
     await postJoin(nickname.value)
-    user.login()
     await router.push({
       name: 'home'
     })

@@ -1,7 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import QuizSolveView from '@/views/QuizSolveView.vue'
-import LoginView from '@/views/LoginView.vue'
 import JoinView from '@/views/JoinView.vue'
+import { getIsLoggedIn } from '@/api/userApi.js'
+import { useUser } from '@/stores/user.js'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -12,16 +13,21 @@ const router = createRouter({
       component: QuizSolveView,
     },
     {
-      path: '/login',
-      name: 'login',
-      component: LoginView,
-    },
-    {
       path: '/join',
       name: 'join',
       component: JoinView,
     }
   ],
+})
+
+router.beforeEach(async () => {
+  const user = useUser()
+  try {
+    await getIsLoggedIn()
+    user.login()
+  } catch {
+    user.logout()
+  }
 })
 
 export default router
