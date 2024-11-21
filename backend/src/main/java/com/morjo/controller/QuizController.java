@@ -24,10 +24,15 @@ public class QuizController {
     private final QuizService quizService;
     private final UserService userService;
 
-    // !TODO 유저정보를 받아서 안 푼 문제만 주게 수정필요
     @GetMapping("/random")
-    public ResponseEntity<?> getRandomQuiz() {
-        Quiz quiz = quizService.getQuizRandom();
+    public ResponseEntity<?> getRandomQuiz(HttpSession session) {
+        Long userId = (Long) session.getAttribute("userId");
+
+        if (userId == null || !userService.checkUser(userId)) {
+            userId = 0L;
+        }
+
+        Quiz quiz = quizService.getQuizRandom(userId);
 
         if (quiz == null) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body("퀴즈가 없습니다");
@@ -61,20 +66,20 @@ public class QuizController {
     @PostMapping("/create")
     public ResponseEntity<?> createQuiz(@RequestBody Quiz quiz, HttpSession session) {
         Object userIdObj = session.getAttribute("userId");
-        
+
         if (userIdObj == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
         }
-        
+
         long userId = (long) userIdObj;
         boolean checkUser = userService.checkUser(userId);
-        
+
         if (!checkUser) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("유효하지 않은 사용자입니다.");
         }
-        
+
         quiz.setCreatedUserId(userId);
-        
+
         long quizId = quizService.createQuiz(quiz);
 
         if (quizId == -1) {

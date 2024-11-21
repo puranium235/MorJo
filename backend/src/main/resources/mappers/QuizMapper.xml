@@ -12,6 +12,11 @@
 
     <select id="selectQuizRandom" resultType="Quiz">
         SELECT quiz_id, content, option1, option2, option3, option4, created_user_id, created_at FROM quiz
+        <if test="userId > 0">
+            WHERE quiz.quiz_id NOT IN
+            (SELECT quiz_id FROM quiz_user
+            WHERE user_id = #{userId} AND (quiz.quiz_id = quiz_user.quiz_id))
+        </if>
         ORDER BY RAND() LIMIT 1
     </select>
     <select id="selectQuizById" parameterType="long" resultType="Quiz">

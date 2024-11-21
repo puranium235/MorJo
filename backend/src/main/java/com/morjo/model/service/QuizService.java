@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
 public class QuizService {
     private final QuizDao quizDao;
 
-    public Quiz getQuizRandom() {
-        return quizDao.selectQuizRandom();
+    public Quiz getQuizRandom(long userId) {
+        return quizDao.selectQuizRandom(userId);
     }
 
     public Quiz getQuizById(long quizId) {
