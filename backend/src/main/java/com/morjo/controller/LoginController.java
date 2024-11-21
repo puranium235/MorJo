@@ -60,6 +60,6 @@ public class LoginController {
         }
 
         session.removeAttribute("userId");
-        return ResponseEntity.status(HttpStatus.OK).body("로그인 완료");
+        return ResponseEntity.status(HttpStatus.OK).body("로그아웃 완료");
     }
 }

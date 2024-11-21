@@ -42,7 +42,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CONFLICT).body("중복된 닉네임입니다");
     }
 
-    @GetMapping("/")
+    @GetMapping("")
     public ResponseEntity<?> getUser(HttpSession session) {
         Long userId = (Long) session.getAttribute("userId");
 
