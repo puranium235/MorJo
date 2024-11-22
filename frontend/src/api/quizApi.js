@@ -17,3 +17,28 @@ export const getQuizResult = async (quizId) => {
     return error.data
   }
 }
+
+export const postQuizCreate = async ({ content, option1, option2, option3, option4, answer }) => {
+  try {
+    const response = await api.post('/quiz/create', {
+      content,
+      option1,
+      option2,
+      option3,
+      option4,
+      answer,
+    })
+    return response.data
+  } catch (error) {
+    throw error
+  }
+}
+
+export const getSpecificQuiz = async (quizId) => {
+  try {
+    const response = await api.get(`/quiz/${quizId}`)
+    return response.data
+  } catch (error) {
+    return error.data
+  }
+}

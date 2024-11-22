@@ -2,15 +2,16 @@
   <header class="header">
     <h1>너만모르조?</h1>
     <nav>
-      <span>문제등록 | </span>
-      <span v-if="!user.isLoggedIn" @click="handleLogin" class="login">로그인</span>
-      <span v-else @click="handleLogout" class="logout">로그아웃</span>
+      <span @click="handleToQuizCreate" class="create pointer">문제등록 | </span>
+      <span v-if="!user.isLoggedIn" @click="handleLogin" class="login pointer">로그인</span>
+      <span v-else @click="handleLogout" class="logout pointer">로그아웃</span>
       <span v-if="user.isLoggedIn"> | 내정보</span>
     </nav>
   </header>
 </template>
 
 <script setup>
+import router from '@/router';
 import { useUser } from '@/stores/user.js'
 import { postLogout } from '@/api/userApi.js'
 
@@ -28,6 +29,10 @@ const handleLogout = async () => {
   await postLogout()
   window.location.reload()
 }
+
+const handleToQuizCreate = () => {
+  router.push({ name: 'create'})
+}
 </script>
 
 <style scoped>
@@ -39,7 +44,7 @@ const handleLogout = async () => {
 
   padding: 20px 0 12px 0;
 }
-.login, .logout {
+.pointer {
   cursor: pointer;
 }
 </style>
