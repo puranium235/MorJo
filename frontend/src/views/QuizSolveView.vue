@@ -4,8 +4,9 @@
     <quiz-content :content="quiz.content"></quiz-content>
     <quiz-option v-for="(option, index) in quiz.options" :key="option" :option="option" :total="result.total"
                  :isResult="isResult" :votes="result.userAnswers[index]" :isAnswer="result.answer - 1 === index"
+
                  :selected="index === userAnswer - 1" @click="handleAnswerClick(index)"></quiz-option>
-    <hr>
+    <hr class="line">
     <div class="this-is">이건</div>
     <div class="quiz-buttons">
       <quiz-button value="상식이다" :selected="isCommonSense === true" :total="result.total" :votes="result.isCommonSense"
@@ -125,7 +126,6 @@ watch(() => isResult.value, async (newValue) => {
   if (newValue === true) {
     setTimeout(() => {
       showNext.value = true
-      console.log("다음이 나와야해")
     }, 2500)
   }
   if (newValue === false) {
@@ -144,12 +144,15 @@ watch(() => isResult.value, async (newValue) => {
 
   width: 40%;
   padding: 20px;
-  border: 1px solid #000000;
   min-width: 450px;
 }
 
 .this-is {
   font-size: 20px;
+}
+
+.line {
+  border: 1px solid #dcdcdc;
 }
 
 .quiz-buttons {

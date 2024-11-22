@@ -1,8 +1,8 @@
 <template>
-  <div class="answer" :class="{ selected }" :style="boxStyle" @mouseup="handleMouseUp">
-    <span class="option">{{ option }}</span>
+  <div class="answer" :class="{ selected }" :style="boxStyle">
+    <span class="text">{{ option }}</span>
     <div v-show="isResult" class="graph" :style="graphStyle"></div>
-    <span v-show="isResult">{{ showPercent.toFixed(1) }}%</span>
+    <span v-show="isResult" class="text">{{ showPercent.toFixed(1) }}%</span>
   </div>
 </template>
 
@@ -40,7 +40,7 @@ watch(() => props.isResult, (newValue) => {
 
 const boxStyle = computed(() => {
   return {
-    border: (props.isResult ? ((props.isAnswer ? '#4CAF50' : '#D14D72') + " 2px") : '#000000 1px') + " solid",
+    border: (props.isResult ? (props.isAnswer ? '#4CAF50' : '#D14D72') : '#dcdcdc') + " 2px solid",
     boxShadow: (props.selected ? "0 0 10px" : "0 0 0") + " " + (props.isResult ? (props.isAnswer ? "#4CAF50" : "#D14D72") : '#616161'),
     cursor: props.isResult ? 'default' : 'pointer'
   }
@@ -65,10 +65,14 @@ const graphStyle = computed(() => {
   line-height: 25px;
   padding: 12px;
   font-size: 16px;
+  border-radius: 2px;
+  background-color: #ffffff;
+}
+.text {
+  z-index: 1;
 }
 .graph {
   position: absolute;
-  z-index: -1;
   top: 0;
   left: 0;
   width: 0;

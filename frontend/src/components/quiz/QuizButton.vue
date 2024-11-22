@@ -1,8 +1,8 @@
 <template>
   <button class="button" :style="boxStyle">
-    <span>{{ value }}</span>
-    <span>{{ isResult ? ` ${showPercent.toFixed(1)} %` : ''}}</span>
+    <span class="text">{{ value }}</span>
     <div v-show="isResult" class="graph" :style="graphStyle"></div>
+    <span class="text">{{ isResult ? ` ${showPercent.toFixed(1)} %` : ''}}</span>
   </button>
 </template>
 
@@ -39,8 +39,8 @@ watch(() => props.isResult, (newValue) => {
 
 const boxStyle = computed(() => {
   return {
-    border: props.isResult && props.selected ? "2px solid #2196F3" : "1px solid #000000",
-    boxShadow: props.isResult && props.selected ? "0 0 10px #2196F3" : "none",
+    border: `2px solid ${props.isResult && props.selected ? "#2196F3" : "#dcdcdc"}`,
+    boxShadow: (props.selected ? "0 0 10px" : "0 0 0") + " " + (props.isResult ? "#2196F3": "#616161"),
     cursor: props.isResult ? 'default' : 'pointer'
   }
 })
@@ -57,17 +57,25 @@ const graphStyle = computed(() => {
 <style scoped>
 .button {
   position: relative;
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
   flex-basis: 50%;
   aspect-ratio: 2;
-  border: 1px solid #000000;
+  background-color: #ffffff;
 
   font-size: 24px;
+  border-radius: 2px;
+}
+.text {
+  z-index: 1;
 }
 .graph {
   position: absolute;
-  z-index: -1;
   bottom: 0;
   left: 0;
+  height: 0;
   width: 100%;
 }
 </style>
