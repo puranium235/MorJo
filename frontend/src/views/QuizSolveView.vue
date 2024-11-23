@@ -23,11 +23,13 @@ import QuizOption from '@/components/quiz/QuizOption.vue'
 import QuizButton from '@/components/quiz/QuizButton.vue'
 
 import { ref, onMounted, watch } from 'vue'
-import { getQuizResult, getRandomQuiz } from '@/api/quizApi.js'
+import { getQuiz, getQuizResult, getRandomQuiz } from '@/api/quizApi.js'
 import { useUser } from '@/stores/user.js'
 import router from '@/router/index.js'
+import { useRoute } from 'vue-router'
 
 const user = useUser()
+const route = useRoute()
 
 const quiz = ref({
   quizId: 0,
@@ -102,7 +104,7 @@ const submit = async () => {
 }
 
 const setQuiz = async () => {
-  const data = await getRandomQuiz()
+  const data = router.currentRoute.value.name === 'home' ? await getRandomQuiz() : await getQuiz(route.params.quizId)
   quiz.value.quizId = data.quizId
   quiz.value.content = data.content
   quiz.value.options[0] = data.option1
@@ -112,6 +114,10 @@ const setQuiz = async () => {
 }
 
 const handleShowNextClick = async () => {
+  if (router.currentRoute.value.name !== 'home') {
+    return
+  }
+
   await setQuiz()
   userAnswer.value = 0
   isCommonSense.value = 0

@@ -9,6 +9,15 @@ export const getRandomQuiz = async () => {
   }
 }
 
+export const getQuiz = async (quizId) => {
+  try {
+    const response = await api.get(`/quiz/${quizId}`)
+    return response.data
+  } catch (error) {
+    return error.data
+  }
+}
+
 export const getQuizResult = async (quizId) => {
   try {
     const response = await api.get(`/quiz/${quizId}/result`)
