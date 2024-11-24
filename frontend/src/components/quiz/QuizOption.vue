@@ -39,17 +39,23 @@ watch(() => props.isResult, (newValue) => {
 })
 
 const boxStyle = computed(() => {
+  const GREEN = '#4CAF50'
+  const RED = '#D14D72'
+  const defaultShadow = '2px 2px 3px rgba(0, 0, 0, 0.1)'
+
   return {
-    border: (props.isResult ? (props.isAnswer ? '#4CAF50' : '#D14D72') : '#dcdcdc') + " 2px solid",
-    boxShadow: (props.selected ? "0 0 10px" : "0 0 0") + " " + (props.isResult ? (props.isAnswer ? "#4CAF50" : "#D14D72") : '#616161'),
+    border: props.isResult ? `${props.isAnswer ? GREEN : RED } 2px solid` : props.selected ? `${GREEN} 2px solid` : 'none',
+    boxShadow: props.selected ? `0 0 10px ${props.isResult && !props.isAnswer ? RED : GREEN}` : defaultShadow,
     cursor: props.isResult ? 'default' : 'pointer'
   }
 })
 
 const graphStyle = computed(() => {
+  const PINK = '#FCC8D1'
+  const LIGHTGREEN = '#DFF2E1'
   return {
     width: `${ showPercent.value }%`,
-    backgroundColor: props.isAnswer ? '#DFF2E1' : '#FCC8D1'
+    backgroundColor: props.isAnswer ? LIGHTGREEN : PINK
   }
 })
 
@@ -61,11 +67,11 @@ const graphStyle = computed(() => {
   position: relative;
   display: flex;
   justify-content: space-between;
+  align-items: center;
   height: 50px;
-  line-height: 25px;
   padding: 12px;
   font-size: 16px;
-  border-radius: 2px;
+  border-radius: 4px;
   background-color: #ffffff;
 }
 .text {
@@ -77,5 +83,6 @@ const graphStyle = computed(() => {
   left: 0;
   width: 0;
   height: 100%;
+  border-radius: 4px;
 }
 </style>

@@ -35,6 +35,7 @@ import TheHeader from '@/components/common/TheHeader.vue'
   position: fixed;
   left: 0;
   top: 0;
+  z-index: -1;
   transform: rotate(180deg);
   width: 40%;
 }
@@ -42,6 +43,7 @@ import TheHeader from '@/components/common/TheHeader.vue'
   position: fixed;
   right: 0;
   bottom: 0;
+  z-index: -1;
   width: 40%;
 }
 </style>

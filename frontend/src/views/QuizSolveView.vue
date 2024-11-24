@@ -4,7 +4,6 @@
     <quiz-content :content="quiz.content"></quiz-content>
     <quiz-option v-for="(option, index) in quiz.options" :key="option" :option="option" :total="result.total"
                  :isResult="isResult" :votes="result.userAnswers[index]" :isAnswer="result.answer - 1 === index"
-
                  :selected="index === userAnswer - 1" @click="handleAnswerClick(index)"></quiz-option>
     <hr class="line">
     <div class="this-is">이건</div>
@@ -151,6 +150,8 @@ watch(() => isResult.value, async (newValue) => {
   width: 40%;
   padding: 20px;
   min-width: 450px;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(50px);
 }
 
 .this-is {
@@ -158,7 +159,7 @@ watch(() => isResult.value, async (newValue) => {
 }
 
 .line {
-  border: 1px solid #dcdcdc;
+  border: 1px solid #ffffff;
 }
 
 .quiz-buttons {

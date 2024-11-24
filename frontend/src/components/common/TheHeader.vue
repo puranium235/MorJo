@@ -1,6 +1,6 @@
 <template>
   <header class="header">
-    <h1>
+    <h1 @click="handleToHome" class="pointer">
       <span class="t1 t">너</span>
       <span class="t2 t">만</span>
       <span class="t3 t">모</span>
@@ -41,6 +41,10 @@ const handleLogout = async () => {
 
 const handleToQuizCreate = () => {
   router.push({ name: 'create'})
+}
+
+const handleToHome = () => {
+  router.push({ name: 'home' })
 }
 </script>
 

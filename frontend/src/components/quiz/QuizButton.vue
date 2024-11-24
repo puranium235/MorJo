@@ -38,9 +38,11 @@ watch(() => props.isResult, (newValue) => {
 })
 
 const boxStyle = computed(() => {
+  const BLUE = '#2196F3'
+  const defaultShadow = '2px 2px 3px rgba(0, 0, 0, 0.1)'
   return {
-    border: `2px solid ${props.isResult && props.selected ? "#2196F3" : "#dcdcdc"}`,
-    boxShadow: (props.selected ? "0 0 10px" : "0 0 0") + " " + (props.isResult ? "#2196F3": "#616161"),
+    border: props.selected ? `2px solid ${BLUE}` : "none",
+    boxShadow: props.selected ? `0 0 10px ${BLUE}` : defaultShadow,
     cursor: props.isResult ? 'default' : 'pointer'
   }
 })
@@ -66,7 +68,7 @@ const graphStyle = computed(() => {
   background-color: #ffffff;
 
   font-size: 24px;
-  border-radius: 2px;
+  border-radius: 4px;
 }
 .text {
   z-index: 1;
