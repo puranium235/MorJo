@@ -1,10 +1,14 @@
 package com.morjo.model.service;
 
+import org.springframework.stereotype.Service;
+
 import com.morjo.model.dao.QuizDao;
+import com.morjo.model.dao.UserDao;
 import com.morjo.model.dto.Quiz;
 import com.morjo.model.dto.QuizResult;
+import com.morjo.model.dto.QuizSubmit;
+
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service
@@ -30,7 +34,6 @@ public class QuizService {
     }
 
     public long createQuiz(Quiz quiz) {
-        // !TODO 유저 아이디를 넣어줄 수 있도록 수정
         if (quiz.getContent() == null || quiz.getAnswer() == 0 || quiz.getOption1() == null
                 || quiz.getOption2() == null) {
             return -1;
@@ -43,5 +46,19 @@ public class QuizService {
         quizDao.insertQuiz(quiz);
 
         return quiz.getQuizId();
+    }
+
+    public int submitQuizResult(QuizSubmit quizSubmit) {
+        long quizId = quizSubmit.getQuizId();
+        Quiz quiz = quizDao.selectQuizById(quizId);
+
+        if ((quizSubmit.getUserAnswer() < 1 || quizSubmit.getUserAnswer() > 4)
+                || (quizSubmit.getUserAnswer() == 3 && quiz.getOption3() == null)
+                || (quizSubmit.getUserAnswer() == 4 && quiz.getOption4() == null)
+                || (quizSubmit.getIsCommonSense() == null)) {
+            return -1;
+        }
+
+        return quizDao.insertQuizSubmit(quizSubmit);
     }
 }

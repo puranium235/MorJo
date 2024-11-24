@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.morjo.model.dto.Quiz;
 import com.morjo.model.dto.QuizResult;
+import com.morjo.model.dto.QuizSubmit;
 import com.morjo.model.service.QuizService;
 import com.morjo.model.service.UserService;
 
@@ -64,17 +65,14 @@ public class QuizController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> createQuiz(@RequestBody Quiz quiz, HttpSession session) {
-        Object userIdObj = session.getAttribute("userId");
+    public ResponseEntity<?> postCreateQuiz(@RequestBody Quiz quiz, HttpSession session) {
+        Long userId = (Long) session.getAttribute("userId");
 
-        if (userIdObj == null) {
+        if (userId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
         }
 
-        long userId = (long) userIdObj;
-        boolean checkUser = userService.checkUser(userId);
-
-        if (!checkUser) {
+        if (!userService.checkUser(userId)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("유효하지 않은 사용자입니다.");
         }
 
@@ -87,6 +85,29 @@ public class QuizController {
         }
 
         return ResponseEntity.status(HttpStatus.CREATED).body(quizId);
+    }
+
+    @PostMapping("/submit")
+    public ResponseEntity<?> postQuizSubmit(@RequestBody QuizSubmit quizSubmit, HttpSession session) {
+        Long userId = (Long) session.getAttribute("userId");
+        
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 상태가 아닙니다");
+        }
+        
+        if (!userService.checkUser(userId)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사이트 회원이 아닙니다");
+        }
+        
+        quizSubmit.setUserId(userId);
+        
+        int result = quizService.submitQuizResult(quizSubmit);
+        
+        if (result != 1) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("유효한 선택지가 아닙니다");
+        }
+        
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
 }
