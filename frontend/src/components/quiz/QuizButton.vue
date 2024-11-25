@@ -75,6 +75,7 @@ const graphStyle = computed(() => {
 }
 .graph {
   position: absolute;
+  border-radius: 4px;
   bottom: 0;
   left: 0;
   height: 0;

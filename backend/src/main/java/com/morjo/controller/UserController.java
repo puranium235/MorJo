@@ -30,16 +30,23 @@ public class UserController {
         }
 
         user.setKakaoId(kakaoId);
-        boolean success = userService.join(user);
+        int result = userService.join(user);
 
-        // !TODO 따로 에러를 줘야하는 상황 : 닉네임 중복
-        if (success) {
+        if (result == 1) {
             session.removeAttribute("kakaoId");
             session.setAttribute("userId", user.getUserId());
             return ResponseEntity.status(HttpStatus.CREATED).build();
         }
 
-        return ResponseEntity.status(HttpStatus.CONFLICT).body("중복된 닉네임입니다");
+        if (result == -2) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("이미 등록된 유저입니다");
+        }
+
+        if (result == -3) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("사용중인 닉네임입니다");
+        }
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류가 발생했습니다");
     }
 
     @GetMapping("")

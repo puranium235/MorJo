@@ -13,5 +13,7 @@ defineProps({
 <style scoped>
 .content {
   font-size: 20px;
+  word-wrap: break-word;
+  white-space: pre-wrap;
 }
 </style>
