@@ -3,7 +3,7 @@
     <div class="title">닉네임을 정해주세요</div>
     <div class="nickname-container">
       <input type="text" v-model="nickname" class="nickname">
-      <div v-if="error" class="error">닉네임을 다시 설정해주세요</div>
+      <div v-show="error" class="error">{{ error }}</div>
     </div>
     <button class="register" @click="handleRegisterClick">가입하기</button>
   </div>
@@ -15,16 +15,53 @@ import { postJoin } from '@/api/userApi.js'
 import router from '@/router/index.js'
 
 const nickname = ref('')
-const error = ref(false)
+const error = ref('')
+
+const checkValidNickname = () => {
+  if (!nickname.value) {
+    error.value = '닉네임을 입력해주세요'
+    return
+  }
+
+  const maxByte = 32
+  let totalByte = 0
+  for (let character of nickname.value) {
+    totalByte += (character.charCodeAt(0)) >> 7 ? 2 : 1
+    if (totalByte > maxByte) {
+      error.value = '영문 32자, 한글 16자까지 입력 가능합니다'
+      return
+    }
+  }
+
+  const rNickname = /^[가-힣a-zA-Z0-9]*$/;
+  if (!rNickname.test(nickname.value)) {
+    error.value = '영문, 숫자, 완성형 한글만 사용 가능합니다'
+    return
+  }
+
+  error.value = ''
+}
 
 const handleRegisterClick = async () => {
+  checkValidNickname()
+  if (error.value) {
+    return
+  }
+
   try {
     await postJoin(nickname.value)
     await router.push({
       name: 'home'
     })
-  } catch {
-    error.value = true
+  } catch (e) {
+    if (e.message.include("중복")) {
+      error.value = e.message;
+      return
+    }
+    alert(e.message)
+    await router.push({
+      name: 'home'
+    })
   }
 
 }
