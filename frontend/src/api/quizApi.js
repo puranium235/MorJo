@@ -51,3 +51,16 @@ export const getSpecificQuiz = async (quizId) => {
     return error.data
   }
 }
+
+export const postQuizSubmit = async ({ quizId, userAnswer, isCommonSense }) => {
+  try {
+    const response = await api.post('/quiz/submit', {
+      quizId,
+      userAnswer,
+      isCommonSense,
+    })
+    return response.data
+  } catch (error) {
+    return error.data
+  }
+}

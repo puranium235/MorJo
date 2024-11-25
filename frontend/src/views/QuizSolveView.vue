@@ -22,7 +22,7 @@ import QuizOption from '@/components/quiz/QuizOption.vue'
 import QuizButton from '@/components/quiz/QuizButton.vue'
 
 import { ref, onMounted, watch } from 'vue'
-import { getQuiz, getQuizResult, getRandomQuiz } from '@/api/quizApi.js'
+import { getQuiz, getQuizResult, getRandomQuiz, postQuizSubmit } from '@/api/quizApi.js'
 import { useUser } from '@/stores/user.js'
 import router from '@/router/index.js'
 import { useRoute } from 'vue-router'
@@ -72,16 +72,23 @@ const handleButtonClick = async (val) => {
   await submit()
 }
 
+
 const submit = async () => {
   if (userAnswer.value === 0 || isCommonSense.value === 0) {
     return
   }
+  
+  const quizSubmit = ({
+    quizId: quiz.value.quizId,
+    userAnswer: userAnswer.value,
+    isCommonSense: isCommonSense.value,
+  })
 
   if (user.isLoggedIn) {
-    // 로그인상태면 결과제출 api 호출
+    await postQuizSubmit(quizSubmit)
   }
+
   const data = await getQuizResult(quiz.value.quizId)
-  console.log(data)
 
   if (data === null) {
     await router.push({ name: 'home' })
@@ -113,7 +120,8 @@ const setQuiz = async () => {
 }
 
 const handleShowNextClick = async () => {
-  if (router.currentRoute.value.name !== 'home') {
+  if (router.currentRoute.value.name == 'quiz') {
+    await router.push({ name: 'home'})
     return
   }
 
