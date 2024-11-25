@@ -61,4 +61,9 @@ public class QuizService {
 
         return quizDao.insertQuizSubmit(quizSubmit);
     }
+    
+    public boolean isSolved(long quizId, long userId) {
+        int result = quizDao.selectQuizUserById(quizId, userId);
+        return result == 1;
+    }
 }

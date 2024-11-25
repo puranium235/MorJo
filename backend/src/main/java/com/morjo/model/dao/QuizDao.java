@@ -10,4 +10,5 @@ public interface QuizDao {
     QuizResult selectQuizResultById(long quizId);
     void insertQuiz(Quiz quiz);
     int insertQuizSubmit(QuizSubmit quizSubmit);
+    int selectQuizUserById(long quizId, long userId);
 }

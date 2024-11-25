@@ -46,4 +46,8 @@
         INSERT INTO quiz_user(quiz_id, user_id, user_answer, is_common_sense)
         VALUES(#{quizId}, #{userId}, #{userAnswer}, #{isCommonSense})
     </insert>
+    <select id="selectQuizUserById" parameterType="long" resultType="int">
+        SELECT COUNT(*) FROM quiz_user
+        WHERE quiz_id = #{quizId} AND user_id = #{userId}
+    </select>
 </mapper>
