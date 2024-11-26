@@ -15,5 +15,6 @@ defineProps({
   font-size: 20px;
   word-wrap: break-word;
   white-space: pre-wrap;
+  width: 100%;
 }
 </style>

@@ -191,10 +191,12 @@ watch(() => isResult.value, async (newValue) => {
 
 .this-is {
   font-size: 20px;
+  width: 100%;
 }
 
 .line {
   border: 1px solid #ffffff;
+  width: 100%;
 }
 
 .quiz-buttons {
