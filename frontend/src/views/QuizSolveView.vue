@@ -1,6 +1,6 @@
 <template>
   <div v-if="showNext" @click="handleShowNextClick" class="show-next"></div>
-  <div class="container">
+  <div v-if="quiz.content" class="container">
     <quiz-content :content="quiz.content"></quiz-content>
     <quiz-option v-for="(option, index) in quiz.options" :key="option" :option="option" :total="result.total"
                  :isResult="isResult" :votes="result.userAnswers[index]" :isAnswer="result.answer - 1 === index"
@@ -13,6 +13,10 @@
       <quiz-button value="아니다" :selected="isCommonSense === false" :total="result.total" :votes="result.notCommonSense"
                    :isResult="isResult" @click="handleButtonClick(false)"></quiz-button>
     </div>
+  </div>
+  <div v-else class="container">
+    <div class="no-quiz">퀴즈가 없어요!</div>
+    <button class="go-create" @click="router.push({ name: 'create' })">퀴즈 등록하러 가기</button>
   </div>
 </template>
 
@@ -32,7 +36,7 @@ const route = useRoute()
 
 const quiz = ref({
   quizId: 0,
-  content: '지금 내 마음은?',
+  content: '',
   options: [
     '안녕하세요',
     '여긴싸피에요',
@@ -77,7 +81,7 @@ const submit = async () => {
   if (userAnswer.value === 0 || isCommonSense.value === 0) {
     return
   }
-  
+
   const quizSubmit = ({
     quizId: quiz.value.quizId,
     userAnswer: userAnswer.value,
@@ -154,12 +158,35 @@ watch(() => isResult.value, async (newValue) => {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  align-items: center;
 
   width: 40%;
   padding: 20px;
   min-width: 450px;
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(50px);
+}
+
+.no-quiz {
+  padding: 30px 0;
+  font-size: 36px;
+  font-weight: 1000;
+}
+
+.go-create {
+  margin: 20px 0;
+  text-align: center;
+  line-height: 52px;
+  width: 60%;
+  height: 52px;
+  border-radius: 4px;
+  background-color: #000000;
+  color: #ffffff;
+  font-size: 16px;
+}
+
+.go-create:hover {
+  background-color: rgba(0, 0, 0, 0.8);
 }
 
 .this-is {
