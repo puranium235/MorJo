@@ -13,8 +13,8 @@
       <span> | </span>
       <span v-if="!user.isLoggedIn" @click="handleLogin" class="pointer">로그인</span>
       <span v-else @click="handleLogout" class="pointer">로그아웃</span>
-      <span v-if="user.isLoggedIn"> | </span>
-      <span v-if="user.isLoggedIn">내정보</span>
+      <!-- <span v-if="user.isLoggedIn"> | </span>
+      <span v-if="user.isLoggedIn">내정보</span> -->
     </nav>
   </header>
 </template>
