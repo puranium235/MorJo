@@ -36,7 +36,7 @@ const route = useRoute()
 
 const quiz = ref({
   quizId: 0,
-  content: '',
+  content: '지금 내 마음은?',
   options: [
     '안녕하세요',
     '여긴싸피에요',
@@ -200,6 +200,7 @@ watch(() => isResult.value, async (newValue) => {
 .quiz-buttons {
   display: flex;
   gap: 20px;
+  width: 100%;
 }
 
 .show-next {
